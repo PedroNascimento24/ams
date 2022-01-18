@@ -1,6 +1,7 @@
+
 class DataBase:
 
-    def init(self):
+    def __init__(self):
         self.user = []
         self.add = []
         self.order = []
@@ -88,3 +89,83 @@ class Menu:
 
             except Exception as e:
                 raise Exception(e)
+
+
+    @staticmethod
+    def _MenuAdd(args):
+        print("+-----------------------------------------------------------------------------------+")
+        print("|                       [1] -> Cart                                                 |")
+        print("|                       [2] -> list of ads                                          |")
+        print("|                       [3] -> Register ad                                          |")
+        print("|                       [4] -> Exit the program                                     |")
+        print("+-----------------------------------------------------------------------------------+")
+        while True:
+            try:
+                choice = input("What is the option? -> ")
+                if int(choice) > 0 and int(choice) < 5:
+                    value = "a"+choice
+
+                    return Menu.options[value](args)
+                    break
+                else:
+                    print("The value entered is not valid")
+
+            except Exception as e:
+                print(e)
+
+
+    @staticmethod
+    def _GertCart(args):
+        for k in args[0].getOrder():
+            if args[1] == k[1]:
+                for a in args[0].getAdd():
+                    if k[2] == a[0]:
+                       print(*a)
+
+
+    @staticmethod
+    def _ListAdd(args):
+        i = 1
+        arrayAdd = []
+
+        for k in args[0].getAdd():
+            if k[5] == 0:
+                arrayAdd.append(k)
+
+        for line in arrayAdd:
+            print(*line)
+
+        if len(arrayAdd) > 0:
+            while True:
+                try:
+                    choice = input("\n Write EXIT to exit.\n To choose the add just type the first int of the line\n What is the add to by? -> ")
+                    if choice.lower() != "exit":
+                        valid = False
+                        for add in arrayAdd:
+                            if int(choice) == int(add[0]):
+
+                                args[0].insertOrder([len(args[0].getOrder()) + 1, args[1], int(choice)])
+                                add[5] = 1
+                                args[0].ChangeAdd(add)
+                                print("Successfully purchased")
+                                valid = True
+                        if valid == False:
+                            print("The value entered is not valid")
+                        else:
+                            break
+                    else:
+                        break
+                except Exception as e:
+                    raise Exception(e)
+        else:
+            print("There is no add")
+
+    @staticmethod
+    def _RegisterAdd(args):
+        print("Add Register")
+        nome = input('Enter your name ad:')
+        des = input('Enter your description ad:')
+        price = input('Enter your ad price:')
+        args[0].insertAdd([len(args[0].getAdd()) + 1, args[1], nome, des, price, 0 ])
+
+        print("Successfully registered.", )
